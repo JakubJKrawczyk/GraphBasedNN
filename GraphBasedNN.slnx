@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="GraphBasedNN.Core/GraphBasedNN.Core.csproj" />
+  <Project Path="GraphBasedNN.Simulation/GraphBasedNN.Simulation.csproj" />
+</Solution>

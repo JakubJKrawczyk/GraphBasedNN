@@ -1,0 +1,132 @@
+# .gitignore dla rozwiązania .NET / Rider
+# Zachowujemy: *.cs, *.csproj, *.sln / *.slnx, konfiguracje CI/CD, skrypty.
+
+############################
+# Kompilacja / Artefakty   #
+############################
+**/bin/
+**/obj/
+# Tymczasowe pliki kompilatora
+*.dll
+*.exe
+*.exe.config
+*.pdb
+*.mdb
+*.tlb
+*.lib
+*.so
+*.dylib
+*.a
+*.cache
+
+############################
+# IDE / Editor             #
+############################
+# Visual Studio
+.vs/
+# JetBrains Rider / IntelliJ
+.idea/
+*.iml
+# VS Code
+.vscode/
+# ReSharper / Rider cache
+_ReSharper.Caches/
+# Ustawienia użytkownika Rider
+*.DotSettings.user
+
+############################
+# Pliki użytkownika        #
+############################
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.local.json
+*.orig
+
+############################
+# NuGet / Pakiety          #
+############################
+# Cache pakietów (gdyby lokalny folder packages był użyty)
+packages/
+# Artefakty paczkowania
+*.nupkg
+*.snupkg
+# Pliki generowane przy restore
+project.assets.json
+*.nuget.g.props
+*.nuget.g.targets
+# Pliki specyfikacji cache
+project.nuget.cache
+# Zostawiamy *.csproj oraz Directory.Packages.props i nuget.config
+
+############################
+# Testy / Analiza          #
+############################
+TestResults/
+*.trx
+# Pokrycie
+coverage*/
+*.coverage
+*.coveragexml
+# Raporty narzędzi
+/*.lcov
+*.opencover.xml
+
+############################
+# Logi / Tymczasowe        #
+############################
+logs/
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.lock
+# Rider restore info
+rider.project.restore.info
+
+############################
+# Pliki generowane MSBuild #
+############################
+**/GlobalUsings.g.cs
+**/GeneratedMSBuildEditorConfig.editorconfig
+**/AssemblyInfo*.cs
+# Jeśli posiadasz własny ręczny AssemblyInfo.cs przenieś go i usuń ten wzorzec.
+
+############################
+# Inne narzędzia           #
+############################
+# SonarQube
+.sonarqube/
+# dotnet format / analyzers tymczasowe
+*.report.json
+
+############################
+# System / OS              #
+############################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+# Linux
+*~
+
+############################
+# Git / Merge              #
+############################
+*.orig
+*.rej
+
+############################
+# Sekcja wyjątków          #
+############################
+# W razie potrzeby odkomentuj aby zachować specyficzne pliki:
+#!**/AssemblyInfo.cs
+
+# Koniec pliku
+
