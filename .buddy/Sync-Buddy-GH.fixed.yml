@@ -3,11 +3,56 @@
   refs:
   - refs/heads/master
   fail_on_prepare_env_warning: true
+  # Wyzwalacz: webhook (GitHub woła ten URL przy push). Patrz uwagi pod plikiem.
   events:
   - type: WEBHOOK
+  # GITHUB_REPO ustaw pod swoje repo. DISCORD_URL ustaw ręcznie w GUI jako masked
+  # (dlatego nie ma go tutaj — pipeline odwołuje się do niego przez $DISCORD_URL).
+  variables:
+  - key: GITHUB_REPO
+    value: https://github.com/OWNER/REPO.git
   actions:
-  - action: gh auth status
+
+  # 1) GH => Buddy: pobierz zmiany z GitHuba i wmerguj do repo w Buddy.
+  #    Konflikt merge => git zwraca !=0 => akcja FAILED => krok 2 pominięty,
+  #    a uruchamia się akcja Discord (ON_FAILURE).
+  - action: GH => Buddy (fetch + merge)
     type: GIT_HUB_CLI
     shell: BASH
-    commands: gh auth status
     integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
+    commands: |-
+      set -euo pipefail
+      git config --global user.name  "Buddy Sync Bot"
+      git config --global user.email "sync@buddy.works"
+      gh auth setup-git
+
+      git checkout master 2>/dev/null || git checkout -B master
+
+      # --- GH => Buddy ---
+      git fetch "$GITHUB_REPO" master
+      git merge --no-edit FETCH_HEAD          # <-- konflikt tutaj wywala akcję
+      git push origin HEAD:refs/heads/master  # utrwal zmiany z GH w repo Buddy (origin)
+
+  # 2) Buddy => GH: wykona się TYLKO gdy krok 1 zakończył się sukcesem (brak konfliktów).
+  - action: Buddy => GH (push)
+    type: GIT_HUB_CLI
+    shell: BASH
+    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
+    commands: |-
+      set -euo pipefail
+      gh auth setup-git
+      # --- Buddy => GH ---
+      git push "$GITHUB_REPO" HEAD:refs/heads/master
+
+  # 3) ON FAILURE: powiadomienie na Discord (np. gdy był konflikt w kroku 1).
+  - action: Discord - sync failed
+    type: DISCORD2
+    trigger_time: ON_FAILURE
+    notification_url: $DISCORD_URL
+    content: |-
+      :warning: **Sync Buddy <=> GitHub nie powiodl sie** (prawdopodobnie konflikt GH=>Buddy)
+      Pipeline: $BUDDY_PIPELINE_NAME
+      Execution: #$BUDDY_EXECUTION_ID
+      Branch: $BUDDY_EXECUTION_BRANCH
+      Revision: $BUDDY_EXECUTION_REVISION
+      Szczegoly: $BUDDY_EXECUTION_URL
