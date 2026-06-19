@@ -1,0 +1,13 @@
+- pipeline: sync-buddy-gh
+  name: Sync Buddy GH
+  refs:
+  - refs/heads/master
+  fail_on_prepare_env_warning: true
+  events:
+  - type: WEBHOOK
+  actions:
+  - action: gh auth status
+    type: GIT_HUB_CLI
+    shell: BASH
+    commands: gh auth status
+    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
