@@ -5,6 +5,8 @@
   fail_on_prepare_env_warning: true
   variables:
   - key: BUDDY_WEBHOOK_URL
+    type: VAR
+    encrypted: true
     value: https://eu.buddy.works/variousprojectsworkspace/graphbasednn/pipelines/pipeline/210936/webhook?token=bud_wh_eu_cepjvhla92gridfzleezx0x0lsy9un
   - key: GH_REPO
     value: JakubJKrawczyk/GraphBasedNN
