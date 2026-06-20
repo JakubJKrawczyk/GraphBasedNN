@@ -5,9 +5,8 @@
   fail_on_prepare_env_warning: true
   variables:
   - key: BUDDY_WEBHOOK_URL
-    type: VAR
+    value: '!encrypted lQOp7VoARoHibmszZOUzb7eBxIBq0hrXmCKNdVNoFsuviKNQYIMPR4Bh2lY9Ec6/Z5Sc+CItbbCNJhbQ6UNzOt/Z1Opw8bTsWB4uhK3vomvUdFeLQ8V6133SPkOsiH41R7bAclcqSmjD6lPc65HoYltlYgUcYA4X75cmjHFWDCMoEILdIAaRMvx6mzgkKM+5.Q171cdVeAfl6S+jm7fRS+g=='
     encrypted: true
-    value: https://eu.buddy.works/variousprojectsworkspace/graphbasednn/pipelines/pipeline/210936/webhook?token=bud_wh_eu_cepjvhla92gridfzleezx0x0lsy9un
   - key: GH_REPO
     value: JakubJKrawczyk/GraphBasedNN
   actions:
