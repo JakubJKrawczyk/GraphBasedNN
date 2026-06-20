@@ -28,12 +28,23 @@
 
       git checkout master 2>/dev/null || git checkout -B master
 
-      # --- GH => Buddy ---
+      # --- GH => Buddy (tylko fetch + merge, BEZ push) ---
       git fetch "$GITHUB_REPO" master
       git merge --no-edit FETCH_HEAD          # <-- konflikt tutaj wywala akcję
-      git push origin HEAD:refs/heads/master  # utrwal zmiany z GH w repo Buddy (origin)
 
-  # 2) Buddy => GH: wykona się TYLKO gdy krok 1 zakończył się sukcesem (brak konfliktów).
+  # 2) Utrwalenie GH => Buddy: natywna akcja Git Push do TEGO SAMEGO repo.
+  #    Buddy autoryzuje push do własnego repo sam (bez 'targets'/auth) - surowy
+  #    'git push origin' z akcji GitHub CLI dostawał 403, bo nie miał poświadczeń
+  #    do hosta Buddy. Ta akcja pushuje commit merge z kroku 1 (wspólny filesystem).
+  #    UWAGA: jeśli 'bdy' odrzuci te pola, skonfiguruj akcję "Git Push" w GUI
+  #    (target = "the same repository"), a potem `bdy pipeline yaml sync-buddy-gh`
+  #    pokaże dokładny schemat do wklejenia tutaj.
+  - action: GH => Buddy (push do repo Buddy)
+    type: PUSH
+    remote_branch: master
+    comment: Sync from GitHub
+
+  # 3) Buddy => GH: wykona się TYLKO gdy poprzednie kroki OK (brak konfliktów).
   - action: Buddy => GH (push)
     type: GIT_HUB_CLI
     shell: BASH
@@ -44,7 +55,7 @@
       # --- Buddy => GH ---
       git push "$GITHUB_REPO" HEAD:refs/heads/master
 
-  # 3) ON FAILURE: powiadomienie na Discord (np. gdy był konflikt w kroku 1).
+  # 4) ON FAILURE: powiadomienie na Discord (np. gdy był konflikt w kroku 1).
   - action: Discord - sync failed
     type: DISCORD2
     trigger_time: ON_FAILURE
