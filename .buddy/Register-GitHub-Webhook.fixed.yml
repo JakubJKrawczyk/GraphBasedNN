@@ -2,23 +2,16 @@
   name: Register GitHub Webhook
   refs:
   - refs/heads/master
-  # Brak 'events' => trigger ręczny ("On click"). Uruchamiasz RAZ, żeby założyć
-  # webhooka na GitHubie wskazującego na webhook URL pipeline'u sync-buddy-gh.
   fail_on_prepare_env_warning: true
   variables:
-  # OWNER/REPO repo na GitHubie
+  - key: BUDDY_WEBHOOK_URL
+    value: https://eu.buddy.works/variousprojectsworkspace/graphbasednn/pipelines/pipeline/210936/webhook?token=bud_wh_eu_cepjvhla92gridfzleezx0x0lsy9un
   - key: GH_REPO
     value: JakubJKrawczyk/GraphBasedNN
-  # Buddy webhook URL pipeline'u sync-buddy-gh (Pipeline -> menu 3 kropki ->
-  # "Webhook URL"). STUB - podmien na wlasciwy URL (zawiera token, wiec najlepiej
-  # nadpisz go w GUI jako MASKED). Pipeline uzywa go przez $BUDDY_WEBHOOK_URL.
-  - key: BUDDY_WEBHOOK_URL
-    value: https://app.buddy.works/REPLACE_ME/trigger-webhook?token=REPLACE_ME
   actions:
   - action: Create/Update push webhook on GitHub
     type: GIT_HUB_CLI
     shell: BASH
-    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
     commands: |-
       set -euo pipefail
       gh auth setup-git
@@ -48,3 +41,4 @@
 
       echo "Aktualne webhooki:"
       gh api "repos/$REPO/hooks" --jq '.[] | {id, url: .config.url, events}'
+    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
