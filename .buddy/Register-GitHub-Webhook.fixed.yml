@@ -10,8 +10,10 @@
   - key: GH_REPO
     value: JakubJKrawczyk/GraphBasedNN
   # Buddy webhook URL pipeline'u sync-buddy-gh (Pipeline -> menu 3 kropki ->
-  # "Webhook URL"). Zawiera token, więc ustaw go w GUI jako MASKED, nie tutaj.
-  # Pipeline odwołuje się do niego przez $BUDDY_WEBHOOK_URL.
+  # "Webhook URL"). STUB - podmien na wlasciwy URL (zawiera token, wiec najlepiej
+  # nadpisz go w GUI jako MASKED). Pipeline uzywa go przez $BUDDY_WEBHOOK_URL.
+  - key: BUDDY_WEBHOOK_URL
+    value: https://app.buddy.works/REPLACE_ME/trigger-webhook?token=REPLACE_ME
   actions:
   - action: Create/Update push webhook on GitHub
     type: GIT_HUB_CLI
