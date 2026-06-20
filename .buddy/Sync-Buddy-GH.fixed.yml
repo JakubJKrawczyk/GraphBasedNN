@@ -6,6 +6,8 @@
   events:
   - type: WEBHOOK
   - type: PUSH
+    refs:
+    - refs/heads/*
   variables:
   - key: GITHUB_REPO
     value: https://github.com/JakubJKrawczyk/GraphBasedNN.git
