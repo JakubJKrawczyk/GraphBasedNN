@@ -6,9 +6,9 @@
   # webhooka na GitHubie wskazującego na webhook URL pipeline'u sync-buddy-gh.
   fail_on_prepare_env_warning: true
   variables:
-  # OWNER/REPO repo na GitHubie (np. lakasabasz/graphbasednn)
+  # OWNER/REPO repo na GitHubie
   - key: GH_REPO
-    value: OWNER/REPO
+    value: JakubJKrawczyk/GraphBasedNN
   # Buddy webhook URL pipeline'u sync-buddy-gh (Pipeline -> menu 3 kropki ->
   # "Webhook URL"). Zawiera token, więc ustaw go w GUI jako MASKED, nie tutaj.
   # Pipeline odwołuje się do niego przez $BUDDY_WEBHOOK_URL.

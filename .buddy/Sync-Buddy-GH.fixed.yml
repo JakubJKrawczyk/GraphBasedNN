@@ -10,7 +10,7 @@
   # (dlatego nie ma go tutaj — pipeline odwołuje się do niego przez $DISCORD_URL).
   variables:
   - key: GITHUB_REPO
-    value: https://github.com/OWNER/REPO.git
+    value: https://github.com/JakubJKrawczyk/GraphBasedNN.git
   actions:
 
   # 1) GH => Buddy: pobierz zmiany z GitHuba i wmerguj do repo w Buddy.
