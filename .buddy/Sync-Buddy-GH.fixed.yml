@@ -3,23 +3,16 @@
   refs:
   - refs/heads/master
   fail_on_prepare_env_warning: true
-  # Wyzwalacz: webhook (GitHub woła ten URL przy push). Patrz uwagi pod plikiem.
   events:
   - type: WEBHOOK
-  # GITHUB_REPO ustaw pod swoje repo. DISCORD_URL ustaw ręcznie w GUI jako masked
-  # (dlatego nie ma go tutaj — pipeline odwołuje się do niego przez $DISCORD_URL).
+  - type: PUSH
   variables:
   - key: GITHUB_REPO
     value: https://github.com/JakubJKrawczyk/GraphBasedNN.git
   actions:
-
-  # 1) GH => Buddy: pobierz zmiany z GitHuba i wmerguj do repo w Buddy.
-  #    Konflikt merge => git zwraca !=0 => akcja FAILED => krok 2 pominięty,
-  #    a uruchamia się akcja Discord (ON_FAILURE).
   - action: GH => Buddy (fetch + merge)
     type: GIT_HUB_CLI
     shell: BASH
-    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
     commands: |-
       set -euo pipefail
       git config --global user.name  "Buddy Sync Bot"
@@ -31,27 +24,19 @@
       # --- GH => Buddy (fetch + merge) ---
       git fetch "$GITHUB_REPO" master
       git merge --no-edit FETCH_HEAD          # <-- konflikt tutaj wywala akcję
-
-  # TODO (utrwalenie GH => Buddy): dodaj w GUI akcję "Git Push" z targetem
-  #   = "the same repository" (branch master) MIEDZY tym merge a push na GH.
-  #   Buddy dopisze poprawny YAML akcji PUSH (raw 'git push origin' = 403).
-
-  # 2) Buddy => GH: wykona się TYLKO gdy poprzednie kroki OK (brak konfliktów).
+    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
   - action: Buddy => GH (push)
     type: GIT_HUB_CLI
     shell: BASH
-    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
     commands: |-
       set -euo pipefail
       gh auth setup-git
       # --- Buddy => GH ---
       git push "$GITHUB_REPO" HEAD:refs/heads/master
-
-  # 3) ON FAILURE: powiadomienie na Discord (np. gdy był konflikt w kroku 1).
+    integration: VNA4o5pmWZdP5BpWeKgRlQ6v0r
   - action: Discord - sync failed
     type: DISCORD2
     trigger_time: ON_FAILURE
-    notification_url: $DISCORD_URL
     content: |-
       :warning: **Sync Buddy <=> GitHub nie powiodl sie** (prawdopodobnie konflikt GH=>Buddy)
       Pipeline: $BUDDY_PIPELINE_NAME
@@ -59,3 +44,4 @@
       Branch: $BUDDY_EXECUTION_BRANCH
       Revision: $BUDDY_EXECUTION_REVISION
       Szczegoly: $BUDDY_EXECUTION_URL
+    notification_url: $DISCORD_URL
